@@ -13,7 +13,7 @@ const charging = require("./src/assets/icons/charging.png")
 const direction = require("./src/assets/icons/send.png")
 
 
-const api_url = "http://3.7.20.173:8503/api/upload"
+const api_url = "http://3.7.20.173:8503/api/upload"   // not working !!
 
 
 const App = () => {
@@ -77,12 +77,7 @@ const App = () => {
       <ViewShot
         style={{ flex: 1 }}
         ref={viewShot} options={{ fileName: "Your-File-Name", format: "jpg", quality: 0.9 }}>
-        <View style={{
-          flex: 1,
-          backgroundColor: "#fff",
-          alignItems: "center",
-          justifyContent: "center"
-        }}>
+        <View style={styles.subContainer}>
 
           <MapView
             style={[styles.map, {
@@ -116,21 +111,13 @@ const App = () => {
                       coordinate={item.places}
                       identifier={item.id}
                       onPress={() => {
-                        setECharge(hotel)
+                        setECharge(item)
                       }}
                     >
-                      <View style={{
-                        width: 30,
-                        height: 30,
-                        borderRadius: 15,
-                        backgroundColor: "aqua",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        resizeMode: "contain"
-                      }}>
+                      <View style={styles.markerCircle}>
                         <Text>{item.id}</Text>
                       </View>
-                    
+
 
                     </Marker>
                   </View>
@@ -143,17 +130,7 @@ const App = () => {
 
 
           <TouchableOpacity
-            style={{
-              position: "absolute",
-              top: 60,
-              left: 10,
-              width: 60,
-              height: 60,
-              borderRadius: 10,
-              backgroundColor: "#333",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+            style={styles.takeShot}
 
             onPress={() => {
               viewShot.current.capture().then(uri => {
@@ -180,12 +157,12 @@ const App = () => {
                   >
                     <View style={{ padding: 10 }}>
 
-                      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                      <View style={styles.cardNameContainer}>
                         <View>
-                        <Text style={{ color: "#fff", }}>{item.name}</Text>
-                        <Text style={{ fontSize:10, color: "#aaa", }}>{item.address}</Text>
+                          <Text style={{ color: "#fff", }}>{item.name}</Text>
+                          <Text style={{ fontSize: 10, color: "#aaa", }}>{item.address}</Text>
                         </View>
-                        
+
                         <Image
                           source={direction}
                           resizeMode="contain"
@@ -200,7 +177,9 @@ const App = () => {
                       <Text style={{ fontSize: 10, color: "#00FFAB", marginTop: 20 }}>SUPPORTED CONNECTION</Text>
                       {
                         item?.connector_types?.map((item, index) => (
-                          <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginTop: 5 }}>
+                          <View 
+                          key={index}
+                          style={styles.connector}>
                             <Image
                               source={charging}
                               resizeMode="contain"
@@ -223,21 +202,12 @@ const App = () => {
                         ))
                       }
 
-
-
                     </View>
                   </View>
                 )
               })
             }
           </ScrollView>
-
-
-
-
-
-
-
         </View>
       </ViewShot>
     </SafeAreaView>
@@ -252,6 +222,12 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+  },
+  subContainer: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center"
   },
   scrollList: {
     position: "absolute",
@@ -271,4 +247,35 @@ const styles = StyleSheet.create({
     width: 200,
     // overflow: "hidden",
   },
+  markerCircle: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: "aqua",
+    justifyContent: "center",
+    alignItems: "center",
+    resizeMode: "contain"
+  },
+  takeShot: {
+    position: "absolute",
+    top: 60,
+    left: 10,
+    width: 60,
+    height: 60,
+    borderRadius: 10,
+    backgroundColor: "#333",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cardNameContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between"
+  },
+  connector: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 5
+  }
 })
